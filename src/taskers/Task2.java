@@ -21,17 +21,23 @@ public class Task2 extends Thread {
     
     private int maxValue, notifyEvery;
     boolean exit = false;
+    private boolean isRunning = false;
     
-    private ArrayList<Notification> notifications = new ArrayList<>();
+    private ArrayList<Notifiable> notifications = new ArrayList<>();
     
     public Task2(int maxValue, int notifyEvery)  {
         this.maxValue = maxValue;
         this.notifyEvery = notifyEvery;
     }
     
+    public boolean getIsRunning() {
+        return this.isRunning;
+    }
+    
     @Override
     public void run() {
         doNotify("Started Task2!");
+        this.isRunning = true;
         
         for (int i = 0; i < maxValue; i++) {
             
@@ -39,27 +45,31 @@ public class Task2 extends Thread {
                 doNotify("It happened in Task2: " + i);
             }
             
-            if (exit) {
+            if (this.exit) {
+                doNotify("Task2 stopped.");
                 return;
             }
         }
         doNotify("Task2 done.");
+        end();
     }
     
     public void end() {
-        exit = true;
+        this.exit = true;
+        this.isRunning = false;
     }
     
     // this method allows a notification handler to be registered to receive notifications
-    public void setOnNotification(Notification notification) {
-        this.notifications.add(notification);
+    public void setOnNotification(Notifiable observer) {
+        this.notifications.add(observer);
     }
     
     private void doNotify(String message) {
         // this provides the notification through the registered notification handler
-        for (Notification notification : notifications) {
+        for (Notifiable observer : notifications) {
             Platform.runLater(() -> {
-                notification.handle(message);
+                observer.notify(new Notification(this, message, isRunning));
+                //notification.handle(message);
             });
         }
     }

@@ -21,6 +21,7 @@ public class Task3 extends Thread {
     
     private int maxValue, notifyEvery;
     boolean exit = false;
+    private boolean isRunning = false;
     
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
@@ -29,24 +30,32 @@ public class Task3 extends Thread {
         this.notifyEvery = notifyEvery;
     }
     
+    public boolean getIsRunning() {
+        return this.isRunning;
+    }
+    
     @Override
     public void run() {
         doNotify("Task3 start.");
+        this.isRunning = true;
         for (int i = 0; i < maxValue; i++) {
             
             if (i % notifyEvery == 0) {
                 doNotify("It happened in Task3: " + i);
             }
             
-            if (exit) {
+            if (this.exit) {
+                doNotify("Task3 stopped.");
                 return;
             }
         }
         doNotify("Task3 done.");
+        end();
     }
     
     public void end() {
-        exit = true;
+        this.exit = true;
+        this.isRunning = false;
     }
     
     // the following two methods allow property change listeners to be added
@@ -63,7 +72,8 @@ public class Task3 extends Thread {
         // this provides the notification through the property change listener
         Platform.runLater(() -> {
             // I'm choosing not to send the old value (second param).  Sending "" instead.
-            pcs.firePropertyChange("message", "", message);
+            //pcs.firePropertyChange("message", "", message);
+            pcs.firePropertyChange("notification", "", new Notification(this, message, isRunning));
         });
     }
 }
