@@ -9,7 +9,24 @@ package taskers;
  *
  * @author dalemusser
  */
-@FunctionalInterface
-public interface Notification {
-    public void handle(String message);
+public class Notification {
+    private Object task;
+    private String message;
+    private boolean isRunning;
+    
+    public Notification(Object task, String message, boolean isRunning) {
+        this.task = task;
+        this.message = message;
+        this.isRunning = isRunning;
+    }
+    
+    public Object getTask() {
+        return this.task;
+    }
+    public String getMessage() {
+        return this.message;
+    }
+    public boolean getIsRunning() {
+        return this.isRunning;
+    }
 }
