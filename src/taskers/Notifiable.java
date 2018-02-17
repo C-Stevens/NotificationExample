@@ -11,5 +11,5 @@ package taskers;
  */
 @FunctionalInterface
 public interface Notifiable {
-    public void notify(String notification);
+    public void notify(Notification notification);
 }
