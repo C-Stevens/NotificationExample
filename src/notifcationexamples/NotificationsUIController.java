@@ -151,11 +151,9 @@ public class NotificationsUIController implements Initializable, Notifiable {
             task3.end();
         } else if(task3 == null || !task3.getIsRunning()) {
             System.out.println("start task3");
-            //task3 = new Task3(2147483647, 1000000);
-            task3 = new Task3(21474836, 1000000);
+            task3 = new Task3(2147483647, 1000000);
             // this uses a property change listener to get messages
             task3.addPropertyChangeListener((PropertyChangeEvent evt) -> {
-                //Notification notification = (Notification)evt.getNewValue();
                 processTask3Notification((Notification)evt.getNewValue());
             });
             task3.start();
